@@ -101,6 +101,11 @@ GZ_VRHNIKA = [
     Text("TRŽAŠKA 11, 1360 VRHNIKA", 215, 691),
 ]
 
+GZS = [
+    Text("GASILSKA ZVEZA SLOVENIJE", 215, 705),
+    Text("TRŽAŠKA CESTA 221, 1360 VRHNIKA", 215, 691),
+]
+
 small_text = "Times-Roman", 8
 
 FONTS = "Times-Roman", 12
@@ -112,11 +117,11 @@ data = json.load(open("data.json", "r", encoding="utf-8"))
 trajanje = Trajanje.from_json(data["data"]["duration"])
 
 
-def make_document(person: Person):
+def make_document(person: Person, assoc: list[Text] = GZ_VRHNIKA):
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
 
-    TEXTS = GZ_VRHNIKA + person.create_texts() + trajanje.create_texts() + [datum]
+    TEXTS = assoc + person.create_texts() + trajanje.create_texts() + [datum]
 
     for text in TEXTS:
         can.setFont(*FONTS)
@@ -126,19 +131,17 @@ def make_document(person: Person):
 
     can.save()
 
-    # move to the beginning of the StringIO buffer
     packet.seek(0)
 
-    # create a new PDF with Reportlab
     new_pdf = PdfReader(packet)
-    # read your existing PDF
+
     existing_pdf = PdfReader(open("R-1.pdf", "rb"))
     output = PdfWriter()
-    # add the "watermark" (which is the new pdf) on the existing page
+
     page = existing_pdf.pages[0]
     page.merge_page(new_pdf.pages[0])
     output.add_page(page)
-    # finally, write "output" to a real file
+
     output_stream = open(f"obrazci/{person.ime}_{person.priimek}.pdf", "wb")
     output.write(output_stream)
     output_stream.close()
