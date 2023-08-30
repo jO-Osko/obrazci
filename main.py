@@ -103,7 +103,7 @@ GZ_VRHNIKA = [
 
 GZS = [
     Text("GASILSKA ZVEZA SLOVENIJE", 215, 705),
-    Text("TRŽAŠKA CESTA 221, 1360 VRHNIKA", 215, 691),
+    Text("TRŽAŠKA CESTA 221, 1000 Ljubljana", 215, 691),
 ]
 
 small_text = "Times-Roman", 8
